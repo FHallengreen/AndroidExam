@@ -50,7 +50,6 @@ fun CreateGame(
     var selectedDifficulty by remember { mutableStateOf(Difficulty.Easy) }
 
     val quizApiState = viewModel.quizApiState
-
     when (quizApiState) {
         is QuizApiState.Loading -> Text("Loading...")
         is QuizApiState.Error -> Text("Error occurred")
