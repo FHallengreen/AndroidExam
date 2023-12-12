@@ -4,10 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Quiz (
-    val type: String,
+    val id: Int,
+    val question: String,
     val difficulty: String,
     val category: String,
-    val question: String,
-    val correct_answer: String,
-    val incorrect_answers: List<String>
+    val correctAnswer: String,
+    val incorrectAnswers: List<String>
 )

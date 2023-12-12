@@ -2,6 +2,7 @@ package com.example.androidexam.ui.createquiz
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,14 +38,25 @@ import com.example.androidexam.model.Questions
 
 /// Create a new game screen
 /// This screen is used to select the category,
-// amount of questions and difficulty level.
+// amount of question and difficulty level.
 /// When the user clicks on the start quiz button
 @Composable
-fun CreateGame(navController: NavHostController, viewModel:
-CreateQuizViewModel = viewModel(factory = CreateQuizViewModel.Factory)) {
+fun CreateGame(
+    navController: NavHostController, viewModel:
+    CreateQuizViewModel = viewModel(factory = CreateQuizViewModel.Factory)
+) {
     var selectedCategory by remember { mutableStateOf(Category.GeneralKnowledge) }
     var selectedQuestions by remember { mutableStateOf(Questions.Five) }
     var selectedDifficulty by remember { mutableStateOf(Difficulty.Easy) }
+
+    val quizApiState = viewModel.quizApiState
+
+    when (quizApiState) {
+        is QuizApiState.Loading -> Text("Loading...")
+        is QuizApiState.Error -> Text("Error occurred")
+        is QuizApiState.Success -> {
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -52,6 +64,7 @@ CreateQuizViewModel = viewModel(factory = CreateQuizViewModel.Factory)) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Text(
             text = "Create a new game",
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
@@ -60,7 +73,7 @@ CreateQuizViewModel = viewModel(factory = CreateQuizViewModel.Factory)) {
         Spacer(modifier = Modifier.height(50.dp))
 
         Text(
-            text = "Select amount of questions:",
+            text = "Select amount of question:",
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary
         )
@@ -102,7 +115,7 @@ CreateQuizViewModel = viewModel(factory = CreateQuizViewModel.Factory)) {
             items = Difficulty.entries,
             selectedItem = selectedDifficulty,
             onItemSelected = { selectedDifficulty = it },
-            labelName = { it.name }
+            labelName = { it.level }
         )
 
 
@@ -117,8 +130,10 @@ CreateQuizViewModel = viewModel(factory = CreateQuizViewModel.Factory)) {
             }
             Spacer(modifier = Modifier.width(50.dp))
             Button(onClick = {
-                viewModel.startQuiz(selectedCategory,
-                    selectedQuestions, selectedDifficulty)
+                viewModel.startQuiz(
+                    selectedCategory,
+                    selectedQuestions, selectedDifficulty
+                )
             }) {
                 Text("Start Quiz")
             }
@@ -150,7 +165,8 @@ fun <T> Dropdown(
             onValueChange = {},
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
-            colors = TextFieldDefaults.textFieldColors(containerColor = MaterialTheme.colorScheme.secondary),
+            colors = TextFieldDefaults.colors(
+                 focusedTrailingIconColor = MaterialTheme.colorScheme.secondary,),
             modifier = Modifier
                 .menuAnchor()
                 .clickable { isExpanded = true }

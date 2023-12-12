@@ -1,6 +1,9 @@
 package com.example.androidexam.ui.createquiz
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -12,28 +15,31 @@ import com.example.androidexam.data.QuizRepository
 import com.example.androidexam.model.Category
 import com.example.androidexam.model.Difficulty
 import com.example.androidexam.model.Questions
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class CreateQuizViewModel(private val quizRepository: QuizRepository) : ViewModel() {
 
+    var quizApiState: QuizApiState by mutableStateOf(QuizApiState.Loading)
+        private set
+
+
     fun startQuiz(category: Category, questions: Questions, difficulty: Difficulty) {
-        val url = buildApiUrl(category.id, questions.number, difficulty.level)
         viewModelScope.launch {
-            try {
-
+            quizApiState = QuizApiState.Loading
+            quizApiState = try {
+                quizRepository.fetchAndCacheQuiz(category.id, questions.number, difficulty.name)
+                QuizApiState.Success
+            } catch (e: IOException) {
+                Log.e("CreateQuizViewModel", e.message ?: "Error occurred")
+                QuizApiState.Error
             }
-            catch (e: Exception) {
-                Log.e(e.message, e.stackTraceToString())
-            }
-
         }
-
-        // TODO: Perform API call and handle the response
     }
 
-    private fun buildApiUrl(categoryId: Int, questions: Int, difficulty: String): String {
-        return "https://opentdb.com/api.php?amount=$questions&category=$categoryId&difficulty=$difficulty&type=multiple"
-    }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

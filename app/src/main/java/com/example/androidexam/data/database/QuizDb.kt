@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 
 /// Database class with a singleton Instance object.
-@Database(entities = [dbQuiz::class], version = 1, exportSchema = false)
+@Database(entities = [CachedDbQuiz::class], version = 1, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class QuizDb : RoomDatabase() {
 
     abstract fun quizDao(): QuizDao
