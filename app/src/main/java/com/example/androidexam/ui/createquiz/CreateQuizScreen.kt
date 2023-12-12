@@ -164,8 +164,9 @@ fun <T> Dropdown(
             onValueChange = {},
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
-            colors = TextFieldDefaults.colors(
-                 focusedTrailingIconColor = MaterialTheme.colorScheme.secondary,),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                 focusedTrailingIconColor = MaterialTheme.colorScheme.primary,),
             modifier = Modifier
                 .menuAnchor()
                 .clickable { isExpanded = true }
