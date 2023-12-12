@@ -1,11 +1,11 @@
 package com.example.androidexam.model
 
-enum class Category(val displayName: String) {
-    GeneralKnowledge("General Knowledge"),
-    ScienceComputers("Science: Computers"),
-    Geography("Geography"),
-    Animals("Animals"),
-    Celebrities("Celebrities")
+enum class Category(val id: Int, val displayName: String) {
+    GeneralKnowledge(9,"General Knowledge"),
+    ScienceComputers(18,"Science: Computers"),
+    Geography(22,"Geography"),
+    Animals(27,"Animals"),
+    Celebrities(26,"Celebrities")
 }
 
 enum class Questions(val number: Int) {
@@ -16,7 +16,6 @@ enum class Questions(val number: Int) {
 }
 
 enum class Difficulty(val level: String) {
-    Any("Any"),
     Easy("Easy"),
     Medium("Medium"),
     Hard("Hard")

@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.androidexam.ui.CreateGame
-import com.example.androidexam.ui.WelcomeScreen
+import com.example.androidexam.ui.createquiz.CreateGame
+import com.example.androidexam.ui.welcome.WelcomeScreen
 import com.example.androidexam.ui.theme.AndroidExamTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,13 +20,11 @@ class MainActivity : ComponentActivity() {
                     composable("welcome") {
                         WelcomeScreen(
                             onStartQuiz = { navController.navigate("createGame") },
-                            onExit = { finish() }
                         )
                     }
                     composable("createGame") {
                         CreateGame(navController)
                     }
-                    // Define other composable routes here
                 }
 
             }

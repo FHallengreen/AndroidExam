@@ -3,7 +3,7 @@ package com.example.androidexam.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Question (
+data class Quiz (
     val type: String,
     val difficulty: String,
     val category: String,

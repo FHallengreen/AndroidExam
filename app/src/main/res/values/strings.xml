@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">AndroidExam</string>
+
+    <string-array name="category">
+        <item>General Knowledge</item>
+        <item>Science: Computers</item>
+        <item>Geography</item>
+        <item>Animals</item>
+        <item>Celebrities</item>
+    </string-array>
+
+    <string-array name="questions">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+    </string-array>
+
+    <string-array name="difficulty">
+        <item>Any</item>
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+    </string-array>
+
 </resources>

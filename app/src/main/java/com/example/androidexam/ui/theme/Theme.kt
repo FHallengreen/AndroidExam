@@ -46,20 +46,13 @@ fun AndroidExamTheme(
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val lightColors = lightColorScheme(
-        primary = Orange500,
-    )
-
-    val darkColors = darkColorScheme(
-        primary = Orange700,
-    )
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-        darkTheme -> darkColors
-        else -> lightColors
+        darkTheme -> DarkColorScheme
+        else -> LightColorScheme
     }
     val view = LocalView.current
     if (!view.isInEditMode) {
