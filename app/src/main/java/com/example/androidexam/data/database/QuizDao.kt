@@ -10,6 +10,10 @@ import com.example.androidexam.data.database.results.QuizResultsDb
 import kotlinx.coroutines.flow.Flow
 import retrofit2.http.GET
 
+
+/// This is the Dao for the Quiz database
+/// It contains all the queries that are used to interact with the database
+/// The queries are used in the QuizRepository
 @Dao
 interface QuizDao {
 

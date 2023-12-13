@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
+/// Interface for the QuizRepository
 interface QuizRepository {
 
     suspend fun fetchAndCacheQuiz(categoryId: Int, amount: Int, difficulty: String)
@@ -28,6 +29,9 @@ interface QuizRepository {
 
 }
 
+/// Implementation of the QuizRepository
+/// @param quizDao: The DAO for the quiz database
+/// @param quizApiService: The API service for the quiz API
 class CachingQuizRepository(
     private val quizDao: QuizDao, private val quizApiService: QuizApiService
 ) : QuizRepository {
@@ -35,6 +39,10 @@ class CachingQuizRepository(
         return quizDao.getAllItems()
     }
 
+    /// Fetch quiz from the API and cache it to the database
+    /// @param categoryId: The category of the quiz
+    /// @param amount: The number of questions in the quiz
+    /// @param difficulty: The difficulty of the quiz
     override suspend fun fetchAndCacheQuiz(categoryId: Int, amount: Int, difficulty: String) {
         val apiResponse = quizApiService.getQuiz(amount, categoryId, difficulty.lowercase())
         Log.i("CachingQuizRepository", "fetchAndCacheQuiz: ${apiResponse.response_code}")
@@ -61,27 +69,34 @@ class CachingQuizRepository(
         }
     }
 
+    /// Save the current progress to the database
+    /// @param progress: The current progress
+    /// @param correctAnswers: The number of correct answers
     override suspend fun saveProgress(progress: Int, correctAnswers: Int) {
         val initialProgress = UserProgressDb(progress = progress, correctAnswers = correctAnswers)
         quizDao.updateUserProgress(initialProgress)
     }
 
+    /// Check if there is a quiz in the database
     override suspend fun checkIfExistingQuiz(): Boolean {
         return quizDao.count() != 0
     }
 
+    /// Get the current question index from the database
     override suspend fun getQuizIndex(): Int {
         return withContext(Dispatchers.IO) {
             quizDao.getCurrentQuestionIndex()
         }
     }
 
+    /// Get the number of correct answers from the database
     override suspend fun getCorrectAnswers(): Int {
         return withContext(Dispatchers.IO) {
             quizDao.getCorrectAnswers()
         }
     }
 
+    /// Delete the quiz from the database
     override suspend fun deleteQuiz() {
         val quizCount = quizDao.count()
         if (quizCount > 1) {
@@ -91,10 +106,12 @@ class CachingQuizRepository(
         }
     }
 
+    /// Save the quiz result to the database
     override suspend fun saveQuizResult(quizResult: QuizResultsDb) {
         quizDao.insertQuizResult(quizResult)
     }
 
+    /// Get the last quiz result from the database
     override suspend fun getLastQuizResult(): QuizResultsDb {
         return quizDao.getLastQuizResult()
     }

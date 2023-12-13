@@ -18,6 +18,7 @@ import com.example.androidexam.data.database.results.QuizResultsDb
 import com.example.androidexam.ui.QuizState
 
 
+/// ViewModel for the CompletedQuizScreen
 class CompletedQuizViewModel(private val quizRepository: QuizRepository) : ViewModel() {
 
 
@@ -28,7 +29,7 @@ class CompletedQuizViewModel(private val quizRepository: QuizRepository) : ViewM
         getLastResult()
     }
 
-
+/// Get the last quiz result from the database
     private fun getLastResult() {
         viewModelScope.launch {
             val result = quizRepository.getLastQuizResult()
@@ -36,6 +37,7 @@ class CompletedQuizViewModel(private val quizRepository: QuizRepository) : ViewM
         }
     }
 
+    /// Factory for creating [CompletedQuizViewModel]
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

@@ -13,6 +13,10 @@ import com.example.androidexam.data.database.CachedDbQuiz
 import com.example.androidexam.ui.QuizState
 import com.example.androidexam.ui.quiz.QuizViewModel
 
+
+/// Quiz screen composable
+/// This screen is used to display the quiz questions and answers.
+/// When the user clicks on an answer, the answer is checked and the next question is displayed.
 @Composable
 fun QuizScreen(
     navController: NavHostController,
@@ -112,6 +116,9 @@ fun QuizContent(quizList: List<CachedDbQuiz>, currentQuestionIndex: Int, viewMod
     }
 }
 
+/// Show feedback composable
+/// This composable is used to display the feedback to the user after answering a question.
+/// When the user clicks on the next question button, the next question is displayed.
 @Composable
 fun ShowFeedback(quizState: QuizState.AnswerSelected, viewModel: QuizViewModel) {
 
@@ -126,7 +133,7 @@ fun ShowFeedback(quizState: QuizState.AnswerSelected, viewModel: QuizViewModel) 
 
     Text(
         text = if (quizState.isCorrect) "You answered correctly. The answer was ${quizState.selectedAnswer}" else "${quizState.selectedAnswer} was not correct, " +
-                " The right answer was ${quizState.correctAnswer}",
+                "the right answer was ${quizState.correctAnswer}",
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.titleLarge
     )

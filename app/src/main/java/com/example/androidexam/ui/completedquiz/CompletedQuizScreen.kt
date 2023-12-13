@@ -24,6 +24,9 @@ import com.example.androidexam.R
 import com.example.androidexam.ui.quiz.QuizViewModel
 import com.example.androidexam.util.decodeUrl
 
+/// Completed quiz screen composable
+/// This screen is used to display the quiz results.
+/// When the user clicks on the button, the quiz is restarted.
 @Composable
 fun CompletedQuizScreen(
     navController: NavHostController,
