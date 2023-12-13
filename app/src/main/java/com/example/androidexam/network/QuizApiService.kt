@@ -15,7 +15,8 @@ interface QuizApiService {
         @Query("amount") amount: Int,
         @Query("category") categoryId: Int,
         @Query("difficulty") difficulty: String,
-        @Query("type") type: String = "multiple"): ApiResponse
+        @Query("type") type: String = "multiple",
+        @Query("encode") encoding: String = "url3986"): ApiResponse
 }
 
 /// This is a helper function that converts the API call to a Flow

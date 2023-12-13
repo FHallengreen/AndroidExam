@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
 /// Database class with a singleton Instance object.
-@Database(entities = [CachedDbQuiz::class], version = 1, exportSchema = false)
+@Database(entities = [CachedDbQuiz::class, UserProgressDb::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class QuizDb : RoomDatabase() {
 

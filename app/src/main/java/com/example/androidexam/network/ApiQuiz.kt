@@ -1,6 +1,8 @@
 package com.example.androidexam.network
 
 import kotlinx.serialization.Serializable
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @Serializable
 data class ApiQuiz (

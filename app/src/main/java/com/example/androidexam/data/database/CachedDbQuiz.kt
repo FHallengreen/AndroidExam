@@ -12,7 +12,7 @@ data class CachedDbQuiz (
     val difficulty: String,
     val category: String,
     val correctAnswer: String,
-    val incorrectAnswers: List<String>
+    val incorrectAnswers: List<String>,
 )
 
 fun List<CachedDbQuiz>.asDomainQuizzes(): List<Quiz>{

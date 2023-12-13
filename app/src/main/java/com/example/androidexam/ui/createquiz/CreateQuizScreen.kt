@@ -2,7 +2,6 @@ package com.example.androidexam.ui.createquiz
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,11 +51,17 @@ fun CreateGame(
     var selectedDifficulty by remember { mutableStateOf(Difficulty.Easy) }
 
     val quizApiState = viewModel.quizApiState
-    when (quizApiState) {
-        is QuizApiState.Loading -> Text("Loading...")
-        is QuizApiState.Error -> Text("Error occurred")
-        is QuizApiState.Success -> {
+
+    LaunchedEffect(quizApiState) {
+        if (quizApiState is QuizApiState.Success) {
+            navController.navigate("QuizScreen")
         }
+    }
+    when (quizApiState) {
+        is QuizApiState.Idle -> {}
+        is QuizApiState.Loading -> CircularProgressIndicator()
+        is QuizApiState.Error -> Text("Error occurred")
+        is QuizApiState.Success -> {}
     }
 
     Column(
@@ -117,7 +124,6 @@ fun CreateGame(
             labelName = { it.level }
         )
 
-
         Spacer(modifier = Modifier.height(50.dp))
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -127,7 +133,9 @@ fun CreateGame(
             {
                 Text("Back")
             }
+
             Spacer(modifier = Modifier.width(50.dp))
+
             Button(onClick = {
                 viewModel.startQuiz(
                     selectedCategory,
@@ -166,7 +174,8 @@ fun <T> Dropdown(
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = MaterialTheme.colorScheme.background,
-                 focusedTrailingIconColor = MaterialTheme.colorScheme.primary,),
+                focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
+            ),
             modifier = Modifier
                 .menuAnchor()
                 .clickable { isExpanded = true }

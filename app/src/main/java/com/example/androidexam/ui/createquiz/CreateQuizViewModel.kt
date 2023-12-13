@@ -15,9 +15,7 @@ import com.example.androidexam.data.QuizRepository
 import com.example.androidexam.model.Category
 import com.example.androidexam.model.Difficulty
 import com.example.androidexam.model.Questions
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -26,9 +24,19 @@ class CreateQuizViewModel(private val quizRepository: QuizRepository) : ViewMode
     var quizApiState: QuizApiState by mutableStateOf(QuizApiState.Loading)
         private set
 
+    private fun checkIfExistingQuiz() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val quiz = quizRepository.fetchQuizFromDatabase()
+            if (quiz != null) {
+                quizRepository.deleteQuiz()
+                Log.e("CreateQuizViewModel", "checkIfExistingQuiz: Quiz deleted")
+            }
+        }
+    }
 
     fun startQuiz(category: Category, questions: Questions, difficulty: Difficulty) {
         viewModelScope.launch {
+            checkIfExistingQuiz()
             quizApiState = QuizApiState.Loading
             quizApiState = try {
                 quizRepository.fetchAndCacheQuiz(category.id, questions.number, difficulty.name)

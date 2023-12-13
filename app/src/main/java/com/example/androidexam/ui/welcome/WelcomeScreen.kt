@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -15,19 +16,27 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.androidexam.R
+import com.example.androidexam.ui.quiz.QuizViewModel
 
 /// Welcome screen composable
 /// This screen is used to welcome the user to the app.
 /// It contains a button to start the quiz.
 /// When the user clicks on the start quiz button, the create game screen is displayed.
 @Composable
-fun WelcomeScreen(onStartQuiz: () -> Unit) {
+fun WelcomeScreen(
+    navController: NavHostController,
+    viewModel: QuizViewModel = viewModel(factory = QuizViewModel.Factory)) {
+    val currentQuestionIndex = viewModel.currentQuestionIndex.value
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -47,17 +56,34 @@ fun WelcomeScreen(onStartQuiz: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(25.dp))
 
-        Button(
-            onClick = onStartQuiz,
-            modifier = Modifier
-                .height(48.dp)
-                .width(300.dp)
-        ) {
-            Text(
-                "Start Quiz",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
+        Column {
+            if (currentQuestionIndex > 0) {
+                Button(
+                    onClick = {navController.navigate("QuizScreen")},
+                    modifier = Modifier
+                        .height(48.dp)
+                        .width(300.dp)
+                ) {
+                    Text(
+                        "Continue",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = { navController.navigate("createGame") },
+                modifier = Modifier
+                    .height(48.dp)
+                    .width(300.dp)
+            ) {
+                Text(
+                    "Start new Quiz",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
     }
 }
