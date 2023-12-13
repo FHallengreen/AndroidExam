@@ -6,7 +6,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.androidexam.data.database.results.QuizResultsDb
 import kotlinx.coroutines.flow.Flow
+import retrofit2.http.GET
 
 @Dao
 interface QuizDao {
@@ -21,7 +23,7 @@ interface QuizDao {
     suspend fun updateUserProgress(progress: UserProgressDb)
 
     //select correct correctAnswers from user_progress_table
-    @Query("SELECT correctAnswers FROM user_progress_table WHERE id = 1")
+    @Query("SELECT correctAnswers FROM user_progress_table")
     fun getCorrectAnswers(): Int
 
     @Update
@@ -40,8 +42,13 @@ interface QuizDao {
     @Query("SELECT COUNT(*) FROM cached_quiz_table")
     fun count(): Int
 
-    // Get the current question index val progress: Int,
     @Query("SELECT progress FROM user_progress_table WHERE id = 1")
     fun getCurrentQuestionIndex(): Int
+
+    @Insert
+    suspend fun insertQuizResult(quizResult: QuizResultsDb)
+
+    @Query("SELECT * FROM quiz_results_table ORDER BY id DESC LIMIT 1")
+    suspend fun getLastQuizResult(): QuizResultsDb
 
 }

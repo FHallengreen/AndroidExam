@@ -21,7 +21,7 @@ import java.io.IOException
 
 class CreateQuizViewModel(private val quizRepository: QuizRepository) : ViewModel() {
 
-    var quizApiState: QuizApiState by mutableStateOf(QuizApiState.Loading)
+    var quizApiState: QuizApiState by mutableStateOf(QuizApiState.Idle)
         private set
 
     private fun checkIfExistingQuiz() {

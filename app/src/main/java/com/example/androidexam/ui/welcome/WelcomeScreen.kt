@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -16,6 +15,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.androidexam.R
+import com.example.androidexam.ui.QuizState
 import com.example.androidexam.ui.quiz.QuizViewModel
 
 /// Welcome screen composable
@@ -35,7 +37,8 @@ import com.example.androidexam.ui.quiz.QuizViewModel
 fun WelcomeScreen(
     navController: NavHostController,
     viewModel: QuizViewModel = viewModel(factory = QuizViewModel.Factory)) {
-    val currentQuestionIndex = viewModel.currentQuestionIndex.value
+    val currentQuestionIndex = viewModel.currentQuestionIndex.intValue
+    val quizState by viewModel.quizState.collectAsState()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

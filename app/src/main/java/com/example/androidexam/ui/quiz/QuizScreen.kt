@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.androidexam.data.database.CachedDbQuiz
+import com.example.androidexam.ui.QuizState
 import com.example.androidexam.ui.quiz.QuizViewModel
 
 @Composable
@@ -27,44 +28,30 @@ fun QuizScreen(
         verticalArrangement = Arrangement.Center
     ) {
         when (quizState) {
-            is QuizViewModel.QuizState.Loading -> {CircularProgressIndicator()}
-            is QuizViewModel.QuizState.QuizLoaded -> QuizContent(
+            is QuizState.Loading -> {
+                CircularProgressIndicator()
+            }
+
+            is QuizState.QuizLoaded -> QuizContent(
                 quizList = viewModel.quizList,
-                currentQuestionIndex = viewModel.currentQuestionIndex.value,
+                currentQuestionIndex = viewModel.currentQuestionIndex.intValue,
                 viewModel = viewModel
             )
-            is QuizViewModel.QuizState.Error -> { Text("Error: ${(quizState as QuizViewModel.QuizState.Error).message}") }
-            is QuizViewModel.QuizState.AnswerSelected -> ShowFeedback(quizState as QuizViewModel.QuizState.AnswerSelected, viewModel)
+
+            is QuizState.Error -> {
+                Text("Error: ${(quizState as QuizState.Error).message}")
+            }
+
+            is QuizState.AnswerSelected -> ShowFeedback(
+                quizState as QuizState.AnswerSelected,
+                viewModel
+            )
+
+            is QuizState.Completed -> navController.navigate("CompletedQuizScreen")
         }
     }
 }
 
-@Composable
-fun ShowFeedback(quizState: QuizViewModel.QuizState.AnswerSelected, viewModel: QuizViewModel) {
-
-    Text(
-        text = if (quizState.isCorrect) "Correct!" else "Incorrect!",
-        color = if (quizState.isCorrect) Color.Green else Color.Red,
-        style = MaterialTheme.typography.headlineLarge,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.padding(top = 16.dp)
-    )
-    Spacer(modifier = Modifier.height(20.dp))
-
-    Text(text = if (quizState.isCorrect) "You answered correctly. The answer was ${quizState.selectedAnswer}" else "${quizState.selectedAnswer} was not correct, " +
-            " The right answer was ${quizState.correctAnswer}", textAlign = TextAlign.Center, style = MaterialTheme.typography.titleLarge)
-
-    Spacer(modifier = Modifier.height(75.dp))
-
-    Button(
-        onClick = { viewModel.moveToNextQuestion() },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    ) {
-        Text("Next Question")
-    }
-}
 
 /// Quiz content composable
 /// This composable is used to display the quiz question and answers.
@@ -75,23 +62,36 @@ fun QuizContent(quizList: List<CachedDbQuiz>, currentQuestionIndex: Int, viewMod
 
     if (quizList.isNotEmpty() && currentQuestionIndex in quizList.indices) {
         val currentQuiz = quizList[currentQuestionIndex]
-        val answers = (currentQuiz.incorrectAnswers + currentQuiz.correctAnswer).shuffled()
+
+        val answers by remember(currentQuiz) {
+            mutableStateOf((currentQuiz.incorrectAnswers + currentQuiz.correctAnswer).shuffled())
+        }
+
+
+        Text(
+            text = "Question ${currentQuestionIndex + 1} of ${quizList.size}",
+            style = MaterialTheme.typography.headlineMedium,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(modifier = Modifier.height(50.dp))
 
         Text(
             text = currentQuiz.question,
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(50.dp))
 
         answers.forEach { answer ->
             val isCorrectAnswer = answer == currentQuiz.correctAnswer
             val isSelectedAnswer =
-                quizState is QuizViewModel.QuizState.AnswerSelected && answer == (quizState as QuizViewModel.QuizState.AnswerSelected).selectedAnswer
+                quizState is QuizState.AnswerSelected && answer == (quizState as QuizState.AnswerSelected).selectedAnswer
 
             Button(
                 onClick = {
-                    if (quizState !is QuizViewModel.QuizState.AnswerSelected) viewModel.onAnswerSelected(
+                    if (quizState !is QuizState.AnswerSelected) viewModel.onAnswerSelected(
                         answer
                     )
                 },
@@ -112,3 +112,45 @@ fun QuizContent(quizList: List<CachedDbQuiz>, currentQuestionIndex: Int, viewMod
     }
 }
 
+@Composable
+fun ShowFeedback(quizState: QuizState.AnswerSelected, viewModel: QuizViewModel) {
+
+    Text(
+        text = if (quizState.isCorrect) "Correct!" else "Incorrect!",
+        color = if (quizState.isCorrect) Color.Green else Color.Red,
+        style = MaterialTheme.typography.headlineLarge,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(top = 16.dp)
+    )
+    Spacer(modifier = Modifier.height(20.dp))
+
+    Text(
+        text = if (quizState.isCorrect) "You answered correctly. The answer was ${quizState.selectedAnswer}" else "${quizState.selectedAnswer} was not correct, " +
+                " The right answer was ${quizState.correctAnswer}",
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.titleLarge
+    )
+
+    Spacer(modifier = Modifier.height(75.dp))
+
+    Log.e("QuizScreen", "${viewModel.currentQuestionIndex.intValue} & ${viewModel.quizList.size}")
+    if (viewModel.currentQuestionIndex.intValue == viewModel.quizList.size) {
+        Button(
+            onClick = { viewModel.completeQuiz() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Text("Finish Quiz")
+        }
+    } else {
+        Button(
+            onClick = { viewModel.moveToNextQuestion() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Text("Next Question")
+        }
+    }
+}

@@ -1,4 +1,4 @@
-package com.example.androidexam.data.database
+package com.example.androidexam.util
 
 import androidx.room.TypeConverter
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken

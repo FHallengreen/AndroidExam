@@ -1,5 +1,6 @@
 package com.example.androidexam.ui.createquiz
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -56,12 +57,6 @@ fun CreateGame(
         if (quizApiState is QuizApiState.Success) {
             navController.navigate("QuizScreen")
         }
-    }
-    when (quizApiState) {
-        is QuizApiState.Idle -> {}
-        is QuizApiState.Loading -> CircularProgressIndicator()
-        is QuizApiState.Error -> Text("Error occurred")
-        is QuizApiState.Success -> {}
     }
 
     Column(
@@ -144,6 +139,13 @@ fun CreateGame(
             }) {
                 Text("Start Quiz")
             }
+        }
+        when (quizApiState) {
+            is QuizApiState.Idle -> {}
+            is QuizApiState.Loading -> CircularProgressIndicator()
+            is QuizApiState.Error -> {Toast.makeText(null, "Error creating quiz",
+                Toast.LENGTH_LONG).show() }
+            is QuizApiState.Success -> {}
         }
 
     }

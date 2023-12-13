@@ -3,34 +3,35 @@ package com.example.androidexam.data
 import android.util.Log
 import com.example.androidexam.data.database.CachedDbQuiz
 import com.example.androidexam.data.database.QuizDao
+import com.example.androidexam.data.database.results.QuizResultsDb
 import com.example.androidexam.data.database.UserProgressDb
 import com.example.androidexam.network.QuizApiService
 import com.example.androidexam.util.decodeUrl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
 interface QuizRepository {
 
     suspend fun fetchAndCacheQuiz(categoryId: Int, amount: Int, difficulty: String)
-
     suspend fun saveProgress(progress: Int, correctAnswers: Int)
     suspend fun fetchQuizFromDatabase(): Flow<List<CachedDbQuiz>>
-
     suspend fun checkIfExistingQuiz(): Boolean
     suspend fun deleteQuiz()
     suspend fun getQuizIndex(): Int
-
     suspend fun getCorrectAnswers(): Int
+    suspend fun saveQuizResult(quizResult: QuizResultsDb)
+
+    suspend fun getLastQuizResult(): QuizResultsDb
+
 
 }
 
 class CachingQuizRepository(
     private val quizDao: QuizDao, private val quizApiService: QuizApiService
 ) : QuizRepository {
-    override suspend fun fetchQuizFromDatabase(): Flow<List<CachedDbQuiz>>{
+    override suspend fun fetchQuizFromDatabase(): Flow<List<CachedDbQuiz>> {
         return quizDao.getAllItems()
     }
 
@@ -64,18 +65,19 @@ class CachingQuizRepository(
         val initialProgress = UserProgressDb(progress = progress, correctAnswers = correctAnswers)
         quizDao.updateUserProgress(initialProgress)
     }
+
     override suspend fun checkIfExistingQuiz(): Boolean {
         return quizDao.count() != 0
     }
 
     override suspend fun getQuizIndex(): Int {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             quizDao.getCurrentQuestionIndex()
         }
     }
 
     override suspend fun getCorrectAnswers(): Int {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             quizDao.getCorrectAnswers()
         }
     }
@@ -87,9 +89,18 @@ class CachingQuizRepository(
         } else {
             Log.i("CachingQuizRepository", "No quiz to delete")
         }
-
     }
 
+    override suspend fun saveQuizResult(quizResult: QuizResultsDb) {
+        quizDao.insertQuizResult(quizResult)
+    }
+
+    override suspend fun getLastQuizResult(): QuizResultsDb {
+        return quizDao.getLastQuizResult()
+    }
 
 }
+
+
+
 
