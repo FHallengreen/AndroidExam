@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,8 +33,36 @@ fun QuizScreen(
                 currentQuestionIndex = viewModel.currentQuestionIndex.value,
                 viewModel = viewModel
             )
-            else -> { Text("Error: ${(quizState as QuizViewModel.QuizState.Error).message}") }
+            is QuizViewModel.QuizState.Error -> { Text("Error: ${(quizState as QuizViewModel.QuizState.Error).message}") }
+            is QuizViewModel.QuizState.AnswerSelected -> ShowFeedback(quizState as QuizViewModel.QuizState.AnswerSelected, viewModel)
         }
+    }
+}
+
+@Composable
+fun ShowFeedback(quizState: QuizViewModel.QuizState.AnswerSelected, viewModel: QuizViewModel) {
+
+    Text(
+        text = if (quizState.isCorrect) "Correct!" else "Incorrect!",
+        color = if (quizState.isCorrect) Color.Green else Color.Red,
+        style = MaterialTheme.typography.headlineLarge,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(top = 16.dp)
+    )
+    Spacer(modifier = Modifier.height(20.dp))
+
+    Text(text = if (quizState.isCorrect) "You answered correctly. The answer was ${quizState.selectedAnswer}" else "${quizState.selectedAnswer} was not correct, " +
+            " The right answer was ${quizState.correctAnswer}", textAlign = TextAlign.Center, style = MaterialTheme.typography.titleLarge)
+
+    Spacer(modifier = Modifier.height(75.dp))
+
+    Button(
+        onClick = { viewModel.moveToNextQuestion() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Text("Next Question")
     }
 }
 
@@ -42,8 +71,11 @@ fun QuizScreen(
 /// When the user clicks on an answer, the answer is checked and the next question is displayed.
 @Composable
 fun QuizContent(quizList: List<CachedDbQuiz>, currentQuestionIndex: Int, viewModel: QuizViewModel) {
+    val quizState by viewModel.quizState.collectAsState()
+
     if (quizList.isNotEmpty() && currentQuestionIndex in quizList.indices) {
         val currentQuiz = quizList[currentQuestionIndex]
+        val answers = (currentQuiz.incorrectAnswers + currentQuiz.correctAnswer).shuffled()
 
         Text(
             text = currentQuiz.question,
@@ -52,11 +84,24 @@ fun QuizContent(quizList: List<CachedDbQuiz>, currentQuestionIndex: Int, viewMod
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        val answers = (currentQuiz.incorrectAnswers + currentQuiz.correctAnswer).shuffled()
-
         answers.forEach { answer ->
+            val isCorrectAnswer = answer == currentQuiz.correctAnswer
+            val isSelectedAnswer =
+                quizState is QuizViewModel.QuizState.AnswerSelected && answer == (quizState as QuizViewModel.QuizState.AnswerSelected).selectedAnswer
+
             Button(
-                onClick = { viewModel.onAnswerSelected(answer) },
+                onClick = {
+                    if (quizState !is QuizViewModel.QuizState.AnswerSelected) viewModel.onAnswerSelected(
+                        answer
+                    )
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = when {
+                        isSelectedAnswer && isCorrectAnswer -> Color.Green
+                        isSelectedAnswer && !isCorrectAnswer -> Color.Red
+                        else -> MaterialTheme.colorScheme.primary
+                    }
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
@@ -64,7 +109,6 @@ fun QuizContent(quizList: List<CachedDbQuiz>, currentQuestionIndex: Int, viewMod
                 Text(answer)
             }
         }
-    } else {
-        Text("No more questions available.")
     }
 }
+

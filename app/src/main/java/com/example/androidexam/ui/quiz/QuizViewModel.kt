@@ -41,6 +41,8 @@ class QuizViewModel(private val quizRepository: QuizRepository) : ViewModel() {
         }
     }
 
+    /// This function is called when the user clicks on the "Delete quiz" button.
+    /// The quiz is deleted from the database.
     private fun loadQuiz() {
         viewModelScope.launch {
             try {
@@ -64,23 +66,38 @@ class QuizViewModel(private val quizRepository: QuizRepository) : ViewModel() {
         }
     }
 
+    /// This function is called when the user clicks on an answer.
+    /// The answer is checked and the next question is displayed.
     fun onAnswerSelected(selectedAnswer: String) {
         viewModelScope.launch {
             checkAnswer(selectedAnswer)
         }
     }
 
-    suspend fun checkAnswer(selectedAnswer: String) {
+    /// This function is called when the user clicks on an answer.
+    /// The answer is checked and the next question is displayed.
+    /// The user's progress is saved in the database.
+    private suspend fun checkAnswer(selectedAnswer: String) {
         val correctAnswers = quizRepository.getCorrectAnswers()
         val currentQuiz = quizList[currentQuestionIndex.value]
         val isCorrect = selectedAnswer == currentQuiz.correctAnswer
-        _quizState.value = QuizState.AnswerSelected(isCorrect, selectedAnswer)
+        _quizState.value = QuizState.AnswerSelected(isCorrect, selectedAnswer, currentQuiz.correctAnswer)
         if (isCorrect) {
             quizRepository.saveProgress(currentQuestionIndex.value + 1, correctAnswers + 1)
             currentQuestionIndex.value += 1
         } else {
             quizRepository.saveProgress(currentQuestionIndex.value + 1, correctAnswers)
             currentQuestionIndex.value += 1
+        }
+    }
+
+    fun moveToNextQuestion(){
+        viewModelScope.launch {
+            if (currentQuestionIndex.value < quizList.size - 1) {
+                _quizState.value = QuizState.QuizLoaded(quizList[currentQuestionIndex.value])
+            } else {
+                _quizState.value = QuizState.Error("No more questions")
+            }
         }
     }
 
@@ -97,7 +114,7 @@ class QuizViewModel(private val quizRepository: QuizRepository) : ViewModel() {
     sealed class QuizState {
         object Loading : QuizState()
         data class QuizLoaded(val quiz: CachedDbQuiz) : QuizState()
-        data class AnswerSelected(val isCorrect: Boolean, val selectedAnswer: String) : QuizState()
+        data class AnswerSelected(val isCorrect: Boolean, val selectedAnswer: String, val correctAnswer: String) : QuizState()
         data class Error(val message: String) : QuizState()
     }
 }
