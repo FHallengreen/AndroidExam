@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.androidexam.data.database.progress.UserProgress
-import com.example.androidexam.data.database.progress.UserProgressDao
 import com.example.androidexam.data.database.result.QuizResultsDao
 import com.example.androidexam.data.database.result.Result
 import com.example.androidexam.util.Converters
