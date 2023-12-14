@@ -27,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.androidexam.R
 import com.example.androidexam.ui.QuizState
+import com.example.androidexam.ui.navigation.QuizScreenRoute
 import com.example.androidexam.ui.quiz.QuizViewModel
 
 /// Welcome screen composable
@@ -54,7 +55,7 @@ fun WelcomeScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Image(
             painter = painterResource(R.drawable.pubquizlogo),
-            contentDescription = null,
+            contentDescription = "pubquizlogo",
             modifier = Modifier.size(300.dp)
         )
         Spacer(modifier = Modifier.height(25.dp))
@@ -62,7 +63,7 @@ fun WelcomeScreen(
         Column {
             if (currentQuestionIndex > 0) {
                 Button(
-                    onClick = {navController.navigate("QuizScreen")},
+                    onClick = {navController.navigate(QuizScreenRoute.QuizScreen.routeName)},
                     modifier = Modifier
                         .height(48.dp)
                         .width(300.dp)
@@ -76,7 +77,7 @@ fun WelcomeScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { navController.navigate("createGame") },
+                onClick = { navController.navigate(QuizScreenRoute.CreateGame.routeName) },
                 modifier = Modifier
                     .height(48.dp)
                     .width(300.dp)

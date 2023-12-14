@@ -4,13 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.androidexam.data.CachingQuizRepository
 import com.example.androidexam.data.database.CachedDbQuiz
 import com.example.androidexam.data.database.QuizDao
 import com.example.androidexam.data.database.QuizDb
-import com.example.androidexam.model.Quiz
-import com.example.androidexam.network.ApiResponse
-import com.example.androidexam.network.QuizApiService
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
@@ -18,12 +14,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 
 
 @RunWith(AndroidJUnit4::class)
-class CachingQuizRepositoryTest {
+class QuizDaoTest {
 
     private lateinit var quizDao: QuizDao
     private lateinit var quizDb: QuizDb

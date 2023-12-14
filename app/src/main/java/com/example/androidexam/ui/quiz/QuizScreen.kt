@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.androidexam.data.database.CachedDbQuiz
 import com.example.androidexam.ui.QuizState
+import com.example.androidexam.ui.navigation.QuizScreenRoute
 import com.example.androidexam.ui.quiz.QuizViewModel
 
 
@@ -51,7 +52,7 @@ fun QuizScreen(
                 viewModel
             )
 
-            is QuizState.Completed -> navController.navigate("CompletedQuizScreen")
+            is QuizState.Completed -> navController.navigate(QuizScreenRoute.CompletedQuizScreen.routeName)
         }
     }
 }

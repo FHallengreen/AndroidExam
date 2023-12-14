@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.androidexam.R
+import com.example.androidexam.ui.navigation.QuizScreenRoute
 import com.example.androidexam.ui.quiz.QuizViewModel
 import com.example.androidexam.util.decodeUrl
 
@@ -69,7 +70,7 @@ fun CompletedQuizScreen(
 
         Column {
             Button(
-                onClick = { navController.navigate("createGame") },
+                onClick = { navController.navigate(QuizScreenRoute.CreateGame.routeName) },
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()

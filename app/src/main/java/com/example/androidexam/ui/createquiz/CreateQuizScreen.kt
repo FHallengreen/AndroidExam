@@ -37,6 +37,7 @@ import androidx.navigation.NavHostController
 import com.example.androidexam.model.Category
 import com.example.androidexam.model.Difficulty
 import com.example.androidexam.model.Questions
+import com.example.androidexam.ui.navigation.QuizScreenRoute
 
 /// Create a new game screen
 /// This screen is used to select the category,
@@ -55,7 +56,7 @@ fun CreateGame(
 
     LaunchedEffect(quizApiState) {
         if (quizApiState is QuizApiState.Success) {
-            navController.navigate("QuizScreen")
+            navController.navigate(QuizScreenRoute.QuizScreen.routeName)
         }
     }
 
@@ -67,7 +68,7 @@ fun CreateGame(
     ) {
 
         Text(
-            text = "Create a new game",
+            text = "Create a new quiz",
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colorScheme.primary
         )
