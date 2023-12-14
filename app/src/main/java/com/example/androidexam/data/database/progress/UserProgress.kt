@@ -1,10 +1,10 @@
-package com.example.androidexam.data.database
+package com.example.androidexam.data.database.progress
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName="user_progress_table")
-data class UserProgressDb (
+data class UserProgress (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 1,
     val progress: Int,

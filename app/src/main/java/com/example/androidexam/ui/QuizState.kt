@@ -1,6 +1,6 @@
 package com.example.androidexam.ui
 
-import com.example.androidexam.data.database.CachedDbQuiz
+import com.example.androidexam.data.database.quiz.CachedDbQuiz
 
 sealed class QuizState {
     object Loading : QuizState()

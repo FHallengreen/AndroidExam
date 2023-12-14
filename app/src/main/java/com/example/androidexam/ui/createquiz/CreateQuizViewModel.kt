@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.androidexam.QuizApplication
-import com.example.androidexam.data.QuizRepository
+import com.example.androidexam.data.database.quiz.QuizRepository
 import com.example.androidexam.model.Category
 import com.example.androidexam.model.Difficulty
 import com.example.androidexam.model.Questions
@@ -27,10 +27,8 @@ class CreateQuizViewModel(private val quizRepository: QuizRepository) : ViewMode
     private fun checkIfExistingQuiz() {
         viewModelScope.launch(Dispatchers.IO) {
             val quiz = quizRepository.fetchQuizFromDatabase()
-            if (quiz != null) {
-                quizRepository.deleteQuiz()
-                Log.e("CreateQuizViewModel", "checkIfExistingQuiz: Quiz deleted")
-            }
+            quizRepository.deleteQuiz()
+            Log.e("CreateQuizViewModel", "checkIfExistingQuiz: Quiz deleted")
         }
     }
 

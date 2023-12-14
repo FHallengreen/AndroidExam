@@ -1,4 +1,4 @@
-package com.example.androidexam.data.database
+package com.example.androidexam.data.database.quiz
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,10 +1,7 @@
-package com.example.androidexam.data
+package com.example.androidexam.data.database.quiz
 
 import android.util.Log
-import com.example.androidexam.data.database.CachedDbQuiz
-import com.example.androidexam.data.database.QuizDao
-import com.example.androidexam.data.database.results.QuizResultsDb
-import com.example.androidexam.data.database.UserProgressDb
+import com.example.androidexam.data.database.progress.UserProgress
 import com.example.androidexam.network.QuizApiService
 import com.example.androidexam.util.decodeUrl
 import kotlinx.coroutines.Dispatchers
@@ -22,9 +19,7 @@ interface QuizRepository {
     suspend fun deleteQuiz()
     suspend fun getQuizIndex(): Int
     suspend fun getCorrectAnswers(): Int
-    suspend fun saveQuizResult(quizResult: QuizResultsDb)
 
-    suspend fun getLastQuizResult(): QuizResultsDb
 
 
 }
@@ -40,6 +35,7 @@ class CachingQuizRepository(
     }
 
     /// Fetch quiz from the API and cache it to the database
+    /// Also save the initial progress to the database
     /// @param categoryId: The category of the quiz
     /// @param amount: The number of questions in the quiz
     /// @param difficulty: The difficulty of the quiz
@@ -62,7 +58,7 @@ class CachingQuizRepository(
             }
             Log.e("CachingQuizRepository", "fetchAndCacheQuiz: ${quizzes.size}")
             quizDao.insertAll(quizzes)
-            val initialProgress = UserProgressDb(progress = 0, correctAnswers = 0)
+            val initialProgress = UserProgress(progress = 0, correctAnswers = 0)
             quizDao.insertUserProgress(initialProgress)
         } catch (e: Exception) {
             Log.e("CachingQuizRepository", "fetchAndCacheQuiz: ${e.message}")
@@ -73,7 +69,7 @@ class CachingQuizRepository(
     /// @param progress: The current progress
     /// @param correctAnswers: The number of correct answers
     override suspend fun saveProgress(progress: Int, correctAnswers: Int) {
-        val initialProgress = UserProgressDb(progress = progress, correctAnswers = correctAnswers)
+        val initialProgress = UserProgress(progress = progress, correctAnswers = correctAnswers)
         quizDao.updateUserProgress(initialProgress)
     }
 
@@ -106,15 +102,6 @@ class CachingQuizRepository(
         }
     }
 
-    /// Save the quiz result to the database
-    override suspend fun saveQuizResult(quizResult: QuizResultsDb) {
-        quizDao.insertQuizResult(quizResult)
-    }
-
-    /// Get the last quiz result from the database
-    override suspend fun getLastQuizResult(): QuizResultsDb {
-        return quizDao.getLastQuizResult()
-    }
 
 }
 

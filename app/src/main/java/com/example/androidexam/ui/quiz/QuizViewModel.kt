@@ -12,9 +12,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.androidexam.QuizApplication
-import com.example.androidexam.data.QuizRepository
-import com.example.androidexam.data.database.CachedDbQuiz
-import com.example.androidexam.data.database.results.QuizResultsDb
+import com.example.androidexam.data.database.quiz.QuizRepository
+import com.example.androidexam.data.database.quiz.CachedDbQuiz
+import com.example.androidexam.data.database.result.Result
+import com.example.androidexam.data.database.result.ResultRepository
 import com.example.androidexam.ui.QuizState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class QuizViewModel(private val quizRepository: QuizRepository) : ViewModel() {
+class QuizViewModel(private val quizRepository: QuizRepository, private val resultRepository: ResultRepository) : ViewModel() {
 
     private val _quizState = MutableStateFlow<QuizState>(QuizState.Loading)
     val quizState: StateFlow<QuizState> = _quizState
@@ -109,12 +110,12 @@ class QuizViewModel(private val quizRepository: QuizRepository) : ViewModel() {
 
     fun completeQuiz() {
         viewModelScope.launch {
-            val quizResult = QuizResultsDb(
+            val quizResult = Result(
                 category = quizList[0].category,
                 totalQuestions = quizList.size,
                 correctAnswers = quizRepository.getCorrectAnswers()
             )
-            quizRepository.saveQuizResult(quizResult)
+            resultRepository.saveQuizResult(quizResult)
 
             quizRepository.saveProgress(0, 0)
             currentQuestionIndex.intValue = 0
@@ -128,7 +129,8 @@ companion object {
         initializer {
             val application = (this[APPLICATION_KEY] as QuizApplication)
             val quizRepository = application.container.quizRepository
-            QuizViewModel(quizRepository = quizRepository)
+            val resultRepository = application.container.resultRepository
+            QuizViewModel(quizRepository = quizRepository, resultRepository = resultRepository)
         }
     }
 }

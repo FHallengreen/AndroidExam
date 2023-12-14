@@ -9,7 +9,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.androidexam.data.database.CachedDbQuiz
+import com.example.androidexam.data.database.quiz.CachedDbQuiz
 import com.example.androidexam.ui.QuizState
 import com.example.androidexam.ui.navigation.QuizScreenRoute
 import com.example.androidexam.ui.quiz.QuizViewModel

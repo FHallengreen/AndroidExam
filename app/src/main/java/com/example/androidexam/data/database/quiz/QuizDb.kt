@@ -1,19 +1,23 @@
-package com.example.androidexam.data.database
+package com.example.androidexam.data.database.quiz
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.androidexam.data.database.results.QuizResultsDb
+import com.example.androidexam.data.database.progress.UserProgress
+import com.example.androidexam.data.database.progress.UserProgressDao
+import com.example.androidexam.data.database.result.QuizResultsDao
+import com.example.androidexam.data.database.result.Result
 import com.example.androidexam.util.Converters
 
 /// Database class with a singleton Instance object.
-@Database(entities = [CachedDbQuiz::class, UserProgressDb::class, QuizResultsDb::class], version = 4, exportSchema = false)
+@Database(entities = [CachedDbQuiz::class, UserProgress::class, Result::class], version = 4, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class QuizDb : RoomDatabase() {
 
     abstract fun quizDao(): QuizDao
+    abstract fun quizResultsDao(): QuizResultsDao
 
     /// Singleton pattern
     companion object {

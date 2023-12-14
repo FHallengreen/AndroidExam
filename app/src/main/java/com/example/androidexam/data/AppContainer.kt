@@ -1,7 +1,11 @@
 package com.example.androidexam.data
 
 import android.content.Context
-import com.example.androidexam.data.database.QuizDb
+import com.example.androidexam.data.database.quiz.CachingQuizRepository
+import com.example.androidexam.data.database.quiz.QuizDb
+import com.example.androidexam.data.database.quiz.QuizRepository
+import com.example.androidexam.data.database.result.ApiResultRepository
+import com.example.androidexam.data.database.result.ResultRepository
 import com.example.androidexam.network.QuizApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import okhttp3.MediaType.Companion.toMediaType
@@ -12,6 +16,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 
 interface AppContainer {
     val quizRepository: QuizRepository
+    val resultRepository: ResultRepository
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -40,6 +45,9 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val quizRepository: QuizRepository by lazy {
         CachingQuizRepository(QuizDb.getDatabase(context = context).quizDao(), retrofitService)
+    }
+    override val resultRepository: ResultRepository by lazy {
+        ApiResultRepository(QuizDb.getDatabase(context = context).quizResultsDao())
     }
 
 
