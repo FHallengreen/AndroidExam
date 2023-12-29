@@ -4,6 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.androidexam.model.Quiz
 
+/**
+ * Data class for the cached quiz
+ * This is the data class that is used to store the quiz in the database
+ */
 @Entity(tableName="cached_quiz_table")
 data class CachedDbQuiz (
     @PrimaryKey(autoGenerate = true)

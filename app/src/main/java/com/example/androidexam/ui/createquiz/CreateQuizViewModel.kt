@@ -19,19 +19,35 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.IOException
 
+/**
+ * Create quiz view model
+ * @param quizRepository the quiz repository
+ */
 class CreateQuizViewModel(private val quizRepository: QuizRepository) : ViewModel() {
 
     var quizApiState: QuizApiState by mutableStateOf(QuizApiState.Idle)
         private set
 
+    /**
+     * Check if there is an existing quiz in the database
+     * If there is an existing quiz, delete it
+     * This is done to prevent the user from starting multiple quizzes
+     */
     private fun checkIfExistingQuiz() {
         viewModelScope.launch(Dispatchers.IO) {
-            val quiz = quizRepository.fetchQuizFromDatabase()
+            quizRepository.fetchQuizFromDatabase()
             quizRepository.deleteQuiz()
             Log.e("CreateQuizViewModel", "checkIfExistingQuiz: Quiz deleted")
         }
     }
 
+    /**
+     * Start quiz
+     * Fetches a new quiz from the api and caches it in the database
+     * @param category the category of the quiz
+     * @param questions the amount of questions in the quiz
+     * @param difficulty the difficulty of the quiz
+     */
     fun startQuiz(category: Category, questions: Questions, difficulty: Difficulty) {
         viewModelScope.launch {
             checkIfExistingQuiz()

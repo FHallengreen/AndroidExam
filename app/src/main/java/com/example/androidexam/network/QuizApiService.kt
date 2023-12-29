@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-/// This is the interface that defines the API
+/**
+ * Used to get the quiz from the API by using Retrofit
+ */
 interface QuizApiService {
     @GET("api.php")
     suspend fun getQuiz(

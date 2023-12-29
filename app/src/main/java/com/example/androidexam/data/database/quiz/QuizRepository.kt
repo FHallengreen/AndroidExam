@@ -34,11 +34,13 @@ class CachingQuizRepository(
         return quizDao.getAllItems()
     }
 
-    /// Fetch quiz from the API and cache it to the database
-    /// Also save the initial progress to the database
-    /// @param categoryId: The category of the quiz
-    /// @param amount: The number of questions in the quiz
-    /// @param difficulty: The difficulty of the quiz
+    /**
+     * Fetches a quiz from the API and caches it in the database
+     * @param categoryId: The category ID of the quiz
+     * @param amount: The number of questions in the quiz
+     * @param difficulty: The difficulty of the quiz
+     * @throws IOException: If there is an error fetching the quiz
+     */
     override suspend fun fetchAndCacheQuiz(categoryId: Int, amount: Int, difficulty: String) {
         val apiResponse = quizApiService.getQuiz(amount, categoryId, difficulty.lowercase())
         Log.i("CachingQuizRepository", "fetchAndCacheQuiz: ${apiResponse.response_code}")
@@ -65,15 +67,20 @@ class CachingQuizRepository(
         }
     }
 
-    /// Save the current progress to the database
-    /// @param progress: The current progress
-    /// @param correctAnswers: The number of correct answers
+    /**
+     * Saves the progress of the user in the database
+     * @param progress: The current progress of the user
+     * @param correctAnswers: The number of correct answers the user has
+     */
     override suspend fun saveProgress(progress: Int, correctAnswers: Int) {
         val initialProgress = UserProgress(progress = progress, correctAnswers = correctAnswers)
         quizDao.updateUserProgress(initialProgress)
     }
 
-    /// Check if there is a quiz in the database
+    /**
+     * Checks if there is an existing quiz in the database
+     * @return: True if there is an existing quiz, false otherwise
+     */
     override suspend fun checkIfExistingQuiz(): Boolean {
         return quizDao.count() != 0
     }

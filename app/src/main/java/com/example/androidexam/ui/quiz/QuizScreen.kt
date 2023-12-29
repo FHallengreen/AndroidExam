@@ -15,9 +15,12 @@ import com.example.androidexam.ui.navigation.QuizScreenRoute
 import com.example.androidexam.ui.quiz.QuizViewModel
 
 
-/// Quiz screen composable
-/// This screen is used to display the quiz questions and answers.
-/// When the user clicks on an answer, the answer is checked and the next question is displayed.
+/**
+ * Quiz screen composable
+ * This screen is used to display the quiz questions and answers.
+ * @param navController the nav controller used to navigate to the completed quiz screen
+ * @param viewModel the view model used to get the current question index
+ */
 @Composable
 fun QuizScreen(
     navController: NavHostController,
@@ -58,9 +61,13 @@ fun QuizScreen(
 }
 
 
-/// Quiz content composable
-/// This composable is used to display the quiz question and answers.
-/// When the user clicks on an answer, the answer is checked and the next question is displayed.
+/**
+ * Quiz content composable
+ * This composable is used to display the quiz questions and answers.
+ * @param quizList the list of quiz questions
+ * @param currentQuestionIndex the current question index
+ * @param viewModel the view model used to get the current question index
+ */
 @Composable
 fun QuizContent(quizList: List<CachedDbQuiz>, currentQuestionIndex: Int, viewModel: QuizViewModel) {
     val quizState by viewModel.quizState.collectAsState()

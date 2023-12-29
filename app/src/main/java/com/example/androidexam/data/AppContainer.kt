@@ -19,6 +19,10 @@ interface AppContainer {
     val resultRepository: ResultRepository
 }
 
+/**
+ * This is the default implementation of [AppContainer],
+ * which includes [QuizRepository] and [ResultRepository]
+ */
 class DefaultAppContainer(private val context: Context) : AppContainer {
 
     private val baseUrl = "https://opentdb.com/"
@@ -26,7 +30,6 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
         level = HttpLoggingInterceptor.Level.BODY // You can change the level as needed
     }
 
-    // Create an OkHttpClient and add the logging interceptor
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
         .build()

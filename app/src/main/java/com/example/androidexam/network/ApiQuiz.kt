@@ -4,6 +4,9 @@ import kotlinx.serialization.Serializable
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 
+/**
+ * Data class for the response from the API
+ */
 @Serializable
 data class ApiQuiz (
     val type: String,

@@ -30,16 +30,19 @@ import com.example.androidexam.ui.QuizState
 import com.example.androidexam.ui.navigation.QuizScreenRoute
 import com.example.androidexam.ui.quiz.QuizViewModel
 
-/// Welcome screen composable
-/// This screen is used to welcome the user to the app.
-/// It contains a button to start the quiz.
-/// When the user clicks on the start quiz button, the create game screen is displayed.
+/**
+* Welcome screen composable
+* This screen is used to welcome the user to the app.
+* It contains a button to start the quiz.
+* When the user clicks on the start quiz button, the create game screen is displayed.
+* @param navController the nav controller used to navigate to the create game screen
+ * @param viewModel the view model used to get the current question index
+ */
 @Composable
 fun WelcomeScreen(
     navController: NavHostController,
     viewModel: QuizViewModel = viewModel(factory = QuizViewModel.Factory)) {
     val currentQuestionIndex = viewModel.currentQuestionIndex.intValue
-    val quizState by viewModel.quizState.collectAsState()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

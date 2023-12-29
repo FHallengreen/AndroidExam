@@ -11,6 +11,11 @@ import com.example.androidexam.ui.completedquiz.CompletedQuizScreen
 import com.example.androidexam.ui.createquiz.CreateGame
 import com.example.androidexam.ui.welcome.WelcomeScreen
 
+/**
+ * NavHost composable function that defines all the navigation in the app.
+ * @param navController the navController that is used to navigate between screens
+ * @param modifier Modifier
+ */
 @Composable
 fun NavComponent(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(

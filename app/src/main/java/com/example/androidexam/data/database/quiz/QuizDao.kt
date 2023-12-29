@@ -10,9 +10,10 @@ import com.example.androidexam.data.database.progress.UserProgress
 import kotlinx.coroutines.flow.Flow
 
 
-/// This is the Dao for the Quiz database
-/// It contains all the queries that are used to interact with the database
-/// The queries are used in the QuizRepository
+/**
+ * Data access object for the quiz
+ * This is the interface that is used to access the database
+ */
 @Dao
 interface QuizDao {
 
@@ -25,17 +26,12 @@ interface QuizDao {
     @Update
     suspend fun updateUserProgress(progress: UserProgress)
 
-    //select correct correctAnswers from user_progress_table
     @Query("SELECT correctAnswers FROM user_progress_table")
     fun getCorrectAnswers(): Int
 
     @Update
     suspend fun updateQuiz(quiz: CachedDbQuiz)
 
-    @Delete
-    suspend fun deleteQuiz(quiz: CachedDbQuiz)
-
-    // Delete all quizzes in the database
     @Query("DELETE FROM cached_quiz_table")
     suspend fun deleteAllQuizzes()
 

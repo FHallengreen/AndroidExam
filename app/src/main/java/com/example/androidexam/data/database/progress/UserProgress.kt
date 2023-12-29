@@ -3,6 +3,9 @@ package com.example.androidexam.data.database.progress
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/**
+ * Data class for the user progress
+ */
 @Entity(tableName="user_progress_table")
 data class UserProgress (
     @PrimaryKey(autoGenerate = true)

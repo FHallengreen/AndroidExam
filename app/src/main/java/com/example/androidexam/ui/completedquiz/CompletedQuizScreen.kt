@@ -25,9 +25,11 @@ import com.example.androidexam.ui.navigation.QuizScreenRoute
 import com.example.androidexam.ui.quiz.QuizViewModel
 import com.example.androidexam.util.decodeUrl
 
-/// Completed quiz screen composable
-/// This screen is used to display the quiz results.
-/// When the user clicks on the button, the quiz is restarted.
+/**
+ * Screen for displaying the results of the last quiz
+ * @param navController Navigation controller for navigating to other screens
+ * @param viewModel ViewModel for the screen
+ */
 @Composable
 fun CompletedQuizScreen(
     navController: NavHostController,

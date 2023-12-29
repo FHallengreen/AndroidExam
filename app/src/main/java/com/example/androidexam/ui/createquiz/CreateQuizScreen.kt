@@ -39,10 +39,14 @@ import com.example.androidexam.model.Difficulty
 import com.example.androidexam.model.Questions
 import com.example.androidexam.ui.navigation.QuizScreenRoute
 
-/// Create a new game screen
-/// This screen is used to select the category,
-// amount of question and difficulty level.
-/// When the user clicks on the start quiz button
+/**
+ * Create quiz screen composable
+ * Create a new game screen
+ * This screen is used to select the category,
+ * amount of question and difficulty level.
+ * When the user clicks on the start quiz button
+ * @param navController the nav controller used to navigate to the quiz screen
+ */
 @Composable
 fun CreateGame(
     navController: NavHostController, viewModel:

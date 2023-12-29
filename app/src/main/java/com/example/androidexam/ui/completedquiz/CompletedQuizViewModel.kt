@@ -16,7 +16,10 @@ import com.example.androidexam.data.database.result.Result
 import com.example.androidexam.data.database.result.ResultRepository
 
 
-/// ViewModel for the CompletedQuizScreen
+/**
+ * ViewModel for the [CompletedQuizScreen]
+ * @param resultRepository Repository for accessing the database
+ */
 class CompletedQuizViewModel(private val resultRepository: ResultRepository) : ViewModel() {
 
 
@@ -27,15 +30,19 @@ class CompletedQuizViewModel(private val resultRepository: ResultRepository) : V
         getLastResult()
     }
 
-/// Get the last quiz result from the database
-fun getLastResult() {
+    /**
+     * Gets the last quiz result from the database
+     */
+    fun getLastResult() {
         viewModelScope.launch {
             val result = resultRepository.getLastQuizResult()
             _lastQuizResult.value = result
         }
     }
 
-    /// Factory for creating [CompletedQuizViewModel]
+    /**
+     * Factory for creating the ViewModel
+     */
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

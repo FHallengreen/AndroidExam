@@ -7,6 +7,9 @@ interface ResultRepository {
     suspend fun getLastQuizResult(): Result
 }
 
+/**
+ * Repository for accessing the quiz results table in the database.
+ */
 class ApiResultRepository(
     private val resultDao: QuizResultsDao
 ) : ResultRepository {
