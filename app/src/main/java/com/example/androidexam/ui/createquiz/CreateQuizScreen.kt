@@ -1,5 +1,6 @@
 package com.example.androidexam.ui.createquiz
 
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,8 +51,8 @@ import com.example.androidexam.ui.navigation.QuizScreenRoute
  */
 @Composable
 fun CreateGame(
-    navController: NavHostController, viewModel:
-    CreateQuizViewModel = viewModel(factory = CreateQuizViewModel.Factory)
+    navController: NavHostController,
+    viewModel: CreateQuizViewModel = viewModel(factory = CreateQuizViewModel.Factory)
 ) {
     var selectedCategory by remember { mutableStateOf(Category.GeneralKnowledge) }
     var selectedQuestions by remember { mutableStateOf(Questions.Five) }
@@ -64,92 +66,174 @@ fun CreateGame(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-        Text(
-            text = "Create a new quiz",
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-            color = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(50.dp))
-
-        Text(
-            text = "Select amount of question:",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-
-        Dropdown(
-            items = Questions.entries,
-            selectedItem = selectedQuestions,
-            onItemSelected = { selectedQuestions = it },
-            labelName = { it.number.toString() }
-        )
-        Spacer(modifier = Modifier.height(50.dp))
-
-        Text(
-            text = "Select a category:",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Dropdown(
-            items = Category.entries,
-            selectedItem = selectedCategory,
-            onItemSelected = { selectedCategory = it },
-            labelName = { it.displayName }
-        )
-
-        Spacer(modifier = Modifier.height(50.dp))
-
-        Text(
-            text = "Select a difficulty:",
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Dropdown(
-            items = Difficulty.entries,
-            selectedItem = selectedDifficulty,
-            onItemSelected = { selectedDifficulty = it },
-            labelName = { it.level }
-        )
-
-        Spacer(modifier = Modifier.height(50.dp))
+    if (isLandscape) {
         Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Button(onClick = { navController.navigateUp() })
-            {
-                Text("Back")
-            }
+            Column {
 
-            Spacer(modifier = Modifier.width(50.dp))
-
-            Button(onClick = {
-                viewModel.startQuiz(
-                    selectedCategory,
-                    selectedQuestions, selectedDifficulty
+                Text(
+                    text = "Create a new quiz",
+                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.primary
                 )
-            }) {
-                Text("Start Quiz")
+                Spacer(modifier = Modifier.height(50.dp))
+
+                Text(
+                    text = "Select amount of question:",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+
+                Dropdown(items = Questions.entries,
+                    selectedItem = selectedQuestions,
+                    onItemSelected = { selectedQuestions = it },
+                    labelName = { it.number.toString() })
+                Spacer(modifier = Modifier.height(50.dp))
+
+
+                Text(
+                    text = "Select a category:",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Dropdown(items = Category.entries,
+                    selectedItem = selectedCategory,
+                    onItemSelected = { selectedCategory = it },
+                    labelName = { it.displayName })
+            }
+            Spacer(modifier = Modifier.height(50.dp))
+
+            Column (horizontalAlignment = Alignment.CenterHorizontally) {
+
+                Text(
+                    text = "Select a difficulty:",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Dropdown(items = Difficulty.entries,
+                    selectedItem = selectedDifficulty,
+                    onItemSelected = { selectedDifficulty = it },
+                    labelName = { it.level })
+                Spacer(modifier = Modifier.height(50.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(onClick = { navController.navigateUp() }) {
+                        Text("Back")
+                    }
+
+                    Spacer(modifier = Modifier.width(50.dp))
+
+                    Button(onClick = {
+                        viewModel.startQuiz(
+                            selectedCategory, selectedQuestions, selectedDifficulty
+                        )
+                    }) {
+                        Text("Start Quiz")
+                    }
+                }
+            }
+        }
+
+    } else {
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Text(
+                text = "Create a new quiz",
+                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(25.dp))
+
+            Text(
+                text = "Select amount of question:",
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+
+            Dropdown(items = Questions.entries,
+                selectedItem = selectedQuestions,
+                onItemSelected = { selectedQuestions = it },
+                labelName = { it.number.toString() })
+            Spacer(modifier = Modifier.height(25.dp))
+
+            Text(
+                text = "Select a category:",
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Dropdown(items = Category.entries,
+                selectedItem = selectedCategory,
+                onItemSelected = { selectedCategory = it },
+                labelName = { it.displayName })
+
+            Spacer(modifier = Modifier.height(25.dp))
+
+            Text(
+                text = "Select a difficulty:",
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Dropdown(items = Difficulty.entries,
+                selectedItem = selectedDifficulty,
+                onItemSelected = { selectedDifficulty = it },
+                labelName = { it.level })
+
+            Spacer(modifier = Modifier.height(25.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(onClick = { navController.navigateUp() }) {
+                    Text("Back")
+                }
+
+                Spacer(modifier = Modifier.width(50.dp))
+
+                Button(onClick = {
+                    viewModel.startQuiz(
+                        selectedCategory, selectedQuestions, selectedDifficulty
+                    )
+                }) {
+                    Text("Start Quiz")
+                }
             }
         }
         when (quizApiState) {
             is QuizApiState.Idle -> {}
             is QuizApiState.Loading -> CircularProgressIndicator()
-            is QuizApiState.Error -> {Toast.makeText(null, "Error creating quiz",
-                Toast.LENGTH_LONG).show() }
+            is QuizApiState.Error -> {
+                Toast.makeText(
+                    null, "Error creating quiz", Toast.LENGTH_LONG
+                ).show()
+            }
+
             is QuizApiState.Success -> {}
         }
 
@@ -162,20 +246,13 @@ fun CreateGame(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> Dropdown(
-    items: List<T>,
-    selectedItem: T,
-    onItemSelected: (T) -> Unit,
-    labelName: (T) -> String
+    items: List<T>, selectedItem: T, onItemSelected: (T) -> Unit, labelName: (T) -> String
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     val selectedItemLabel = labelName(selectedItem)
 
-    ExposedDropdownMenuBox(
-        expanded = isExpanded,
-        onExpandedChange = { isExpanded = !isExpanded }
-    ) {
-        TextField(
-            value = selectedItemLabel,
+    ExposedDropdownMenuBox(expanded = isExpanded, onExpandedChange = { isExpanded = !isExpanded }) {
+        TextField(value = selectedItemLabel,
             onValueChange = {},
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
@@ -185,22 +262,15 @@ fun <T> Dropdown(
             ),
             modifier = Modifier
                 .menuAnchor()
-                .clickable { isExpanded = true }
-        )
+                .clickable { isExpanded = true })
 
-        DropdownMenu(
-            expanded = isExpanded,
-            onDismissRequest = { isExpanded = false }
-        ) {
+        DropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }) {
             items.forEach { item ->
                 val itemLabel = labelName(item)
-                DropdownMenuItem(
-                    text = { Text(text = itemLabel) },
-                    onClick = {
-                        onItemSelected(item)
-                        isExpanded = false
-                    }
-                )
+                DropdownMenuItem(text = { Text(text = itemLabel) }, onClick = {
+                    onItemSelected(item)
+                    isExpanded = false
+                })
             }
         }
     }

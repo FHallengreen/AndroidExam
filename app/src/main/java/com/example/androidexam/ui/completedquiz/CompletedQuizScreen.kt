@@ -8,12 +8,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -37,7 +39,6 @@ fun CompletedQuizScreen(
 ) {
 
     val lastQuizResult = viewModel.lastQuizResult.value
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -46,15 +47,15 @@ fun CompletedQuizScreen(
         Spacer(modifier = Modifier.height(50.dp))
 
         if (lastQuizResult != null) {
-            Text(text = "Quiz Completed", style = MaterialTheme.typography.displayLarge.copy
+            Text(text = "Quiz Completed", style = MaterialTheme.typography.displaySmall.copy
                 (fontWeight = FontWeight.Bold))
 
             Spacer(modifier = Modifier.height(50.dp))
             Text(
-                text = "Quiz Category: ${decodeUrl(lastQuizResult.category)} \n " +
+                text =
                         "Questions Answered: ${lastQuizResult.totalQuestions} \n " +
                         "Correct Answers: ${lastQuizResult.correctAnswers}",
-                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary,
                 textAlign = TextAlign.Center,
             )
@@ -62,12 +63,7 @@ fun CompletedQuizScreen(
             Text(text = "No quiz results available")
         }
 
-        Spacer(modifier = Modifier.height(50.dp))
-        Image(
-            painter = painterResource(R.drawable.pubquizlogo),
-            contentDescription = null,
-            modifier = Modifier.size(200.dp)
-        )
+
         Spacer(modifier = Modifier.height(50.dp))
 
         Column {

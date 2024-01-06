@@ -87,14 +87,14 @@ fun QuizContent(quizList: List<CachedDbQuiz>, currentQuestionIndex: Int, viewMod
             color = MaterialTheme.colorScheme.primary
         )
 
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         Text(
             text = currentQuiz.question,
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         answers.forEach { answer ->
             val isCorrectAnswer = answer == currentQuiz.correctAnswer

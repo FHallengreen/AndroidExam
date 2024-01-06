@@ -5,9 +5,11 @@ package com.example.androidexam.ui.welcome
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -31,17 +33,18 @@ import com.example.androidexam.ui.navigation.QuizScreenRoute
 import com.example.androidexam.ui.quiz.QuizViewModel
 
 /**
-* Welcome screen composable
-* This screen is used to welcome the user to the app.
-* It contains a button to start the quiz.
-* When the user clicks on the start quiz button, the create game screen is displayed.
-* @param navController the nav controller used to navigate to the create game screen
+ * Welcome screen composable
+ * This screen is used to welcome the user to the app.
+ * It contains a button to start the quiz.
+ * When the user clicks on the start quiz button, the create game screen is displayed.
+ * @param navController the nav controller used to navigate to the create game screen
  * @param viewModel the view model used to get the current question index
  */
 @Composable
 fun WelcomeScreen(
     navController: NavHostController,
-    viewModel: QuizViewModel = viewModel(factory = QuizViewModel.Factory)) {
+    viewModel: QuizViewModel = viewModel(factory = QuizViewModel.Factory)
+) {
     val currentQuestionIndex = viewModel.currentQuestionIndex.intValue
 
     Column(
@@ -59,17 +62,21 @@ fun WelcomeScreen(
         Image(
             painter = painterResource(R.drawable.pubquizlogo),
             contentDescription = "pubquizlogo",
-            modifier = Modifier.size(300.dp)
+            modifier = Modifier.size(200.dp)
         )
         Spacer(modifier = Modifier.height(25.dp))
 
-        Column {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
             if (currentQuestionIndex > 0) {
+
                 Button(
-                    onClick = {navController.navigate(QuizScreenRoute.QuizScreen.routeName)},
+                    onClick = { navController.navigate(QuizScreenRoute.QuizScreen.routeName) },
                     modifier = Modifier
                         .height(48.dp)
-                        .width(300.dp)
+                        .width(150.dp)
                 ) {
                     Text(
                         "Continue",
@@ -78,7 +85,7 @@ fun WelcomeScreen(
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(16.dp))
+
             Button(
                 onClick = { navController.navigate(QuizScreenRoute.CreateGame.routeName) },
                 modifier = Modifier
